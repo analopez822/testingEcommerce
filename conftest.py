@@ -3,11 +3,8 @@ from typing import Generator
 from slugify import slugify
 from playwright.sync_api import Page
 
-from pages.login_page import LoginPage
-from pages.navegacion_page import NavegacionPage
-from pages.panel_izquierdo_page import PanelIzquierdoPage
-from pages.reparto_imputaciones_page import RepartoImputacionesPage
-from pages.usuarios import UsuariosPage
+from pages.shared.login_page import LoginPage
+from pages.shared.navegacion_page import NavegacionPage
 
 
 @pytest.hookimpl(hookwrapper=True)
@@ -52,3 +49,10 @@ def app_login(page: Page) -> Generator[LoginPage, None, None]:
     """Inyecta el contexto de las pruebas de la app de login"""
     login_page = LoginPage(page)
     yield login_page
+
+
+@pytest.fixture(scope="function")
+def app_navegacion(page: Page) -> Generator[NavegacionPage, None, None]:
+    """Inyecta el contexto de las pruebas de la app de navegación"""
+    navegacion_page = NavegacionPage(page)
+    yield navegacion_page
