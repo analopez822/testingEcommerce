@@ -15,7 +15,7 @@ class NavegacionPage(BasePage):
         self._novedades_boton: str = "Novedades"
         self._contraste_oscuro_boton: str = "Cambiar a tema claro"
         self._contraste_claro_boton: str = "Cambiar a tema oscuro"
-        self._carrito_boton: str = "Abrir carrito" # "/carrito" # '[aria-label="Abrir carrito"]'
+        self._carrito_boton: str = "Abrir carrito"  # "/carrito"   #'[aria-label="Abrir carrito"]'
         self._login_boton:str = "Iniciar sesión"
 
 

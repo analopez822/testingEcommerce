@@ -50,7 +50,6 @@ def app_login(page: Page) -> Generator[LoginPage, None, None]:
     login_page = LoginPage(page)
     yield login_page
 
-
 @pytest.fixture(scope="function")
 def app_navegacion(page: Page) -> Generator[NavegacionPage, None, None]:
     """Inyecta el contexto de las pruebas de la app de navegación"""

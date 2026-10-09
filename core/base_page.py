@@ -49,17 +49,18 @@ class BasePage:
         """Click a button by its accessible name, waiting for it to be visible and scrolling it into view.
         Falls back to a force click if a normal click fails (covers overlays/obstructions).
         """
-        locator = self.page.get_by_role("button", name=re.compile(re.escape(button_text), re.IGNORECASE))
-        locator.click()
-
-    def refresh_table(self):
-        button = self.page.locator('button[aria-label="Actualizar lista"]')   # ==> CSS
-        button.click()
-        self.page.wait_for_timeout(3000)
+        # locator = self.page.get_by_role("button", name=re.compile(re.escape(button_text), re.IGNORECASE))
+        # locator.click()
+        self.page.get_by_role("button", name=button_text).click()
 
     def click_link(self, texto: str) -> None:
-        self.page.click(f"a:has-text('{texto}')")   #  self.page.get_by_role("link", name=texto).click()
+        self.page.click(f"a:has-text('{texto}')")
         # self.page.locator(f'a[href*="{texto}"]').click()
+
+    def refresh_table(self):
+        button = self.page.locator('button[aria-label="Actualizar lista"]')  # ==> CSS
+        button.click()
+        self.page.wait_for_timeout(3000)
 
 
     # def scroll_sideways(self, direction: str, pixels: int) -> None:

@@ -31,7 +31,8 @@ class TestNavegacionPage:
     def test_carrito(self, app_navegacion: NavegacionPage):
         app_navegacion.navegar()
         app_navegacion.buscar_por_rol("link", name=app_navegacion._carrito_boton).click()
-        #app_navegacion.click_link(app_navegacion._carrito_boton)
+        # app_navegacion.click_link(app_navegacion._carrito_boton) ==> cambiar a "self._carrito_boton: str = "/carrito"" en navegacion_page.py
+        # y uncomment esta linea en click_link() method de base_page.py: self.page.locator(f'a[href*="{texto}"]').click()
         expect(app_navegacion.buscar_por_texto("Revisa lo que llevas antes de pasar por caja.")).to_be_visible()
 
     def test_login(self, app_navegacion: NavegacionPage):
