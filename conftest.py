@@ -5,6 +5,7 @@ from playwright.sync_api import Page
 
 from pages.shared.login_page import LoginPage
 from pages.shared.navegacion_page import NavegacionPage
+from pages.shared.catalogo_page import CatalogoPage
 
 
 @pytest.hookimpl(hookwrapper=True)
@@ -55,3 +56,9 @@ def app_navegacion(page: Page) -> Generator[NavegacionPage, None, None]:
     """Inyecta el contexto de las pruebas de la app de navegación"""
     navegacion_page = NavegacionPage(page)
     yield navegacion_page
+
+@pytest.fixture(scope="function")
+def app_catalogo(page: Page) -> Generator[CatalogoPage, None, None]:
+    """Inyecta el contexto de las pruebas de la app de catálogo"""
+    catalogo_page = CatalogoPage(page)
+    yield catalogo_page
