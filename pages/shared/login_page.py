@@ -9,7 +9,7 @@ class LoginPage(BasePage):
     def __init__(self, page: Page):
         super().__init__(page)
 
-        # locators pagina login
+        # locators formulario login
         self._entrar_llave_acceso: str = "Entrar con llave de acceso"
         self._texto: str = "Accede a tu cuenta para comprar y seguir tus pedidos."
         self._email: str = "input[name='email']"
@@ -49,9 +49,9 @@ class LoginPage(BasePage):
 
         # locator formulario nueva contrasenia
         self._contrasenia_nueva: str = "Elige una nueva contraseña."
-        self._password_string: str = "contraseña123"
+        self._password_string: str = "nueva-contraseña123"
         self._boton_guardar_contrasenia: str = "Guardar contraseña"
-        self._mensaje_contrasenia_actualizada: str = "Contraseña actualizada correctamente"
+        self._mensaje_contrasenia_actualizada: str = "Contraseña actualizada"
         self._demasiados_intentos: str = "Demasiados intentos. Inténtalo más tarde."
 
         self._verifica_correo_nuevo: str = "Introduce el código de 6 dígitos"
