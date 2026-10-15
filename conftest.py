@@ -8,6 +8,7 @@ from pages.shared.navegacion_page import NavegacionPage
 from pages.shared.catalogo_page import CatalogoPage
 from pages.shared.finalizar_compra_page import FinalizarCompraPage
 from pages.shared.recibo_pedido_page import ReciboPedidoPage
+from pages.shared.mi_cuenta_page import MiCuentaPage
 
 
 @pytest.hookimpl(hookwrapper=True)
@@ -76,3 +77,9 @@ def app_recibo_pedido(page: Page) -> Generator[ReciboPedidoPage, None, None]:
     """Inyecta el contexto de las pruebas de la app de recibo pedido"""
     recibo_pedido_page = ReciboPedidoPage(page)
     yield recibo_pedido_page
+
+@pytest.fixture(scope="function")
+def app_mi_cuenta(page: Page) -> Generator[MiCuentaPage, None, None]:
+    """Inyecta el contexto de las pruebas de la app de mi cuenta"""
+    mi_cuenta_page = MiCuentaPage(page)
+    yield mi_cuenta_page

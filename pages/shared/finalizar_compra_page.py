@@ -31,3 +31,4 @@ class FinalizarCompraPage(BasePage):
         # locators pagina cancelar compra
         self._cancelar_dialogo: str = "¿Cancelar la compra?"
         self._cancelar: str = "Cancelar"
+        self._compra_cancelada: str = "Compra cancelada"
