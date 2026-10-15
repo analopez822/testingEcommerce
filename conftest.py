@@ -6,6 +6,8 @@ from playwright.sync_api import Page
 from pages.shared.login_page import LoginPage
 from pages.shared.navegacion_page import NavegacionPage
 from pages.shared.catalogo_page import CatalogoPage
+from pages.shared.finalizar_compra_page import FinalizarCompraPage
+from pages.shared.recibo_pedido_page import ReciboPedidoPage
 
 
 @pytest.hookimpl(hookwrapper=True)
@@ -62,3 +64,15 @@ def app_catalogo(page: Page) -> Generator[CatalogoPage, None, None]:
     """Inyecta el contexto de las pruebas de la app de catálogo"""
     catalogo_page = CatalogoPage(page)
     yield catalogo_page
+
+@pytest.fixture(scope="function")
+def app_finalizar_compra(page: Page) -> Generator[FinalizarCompraPage, None, None]:
+    """Inyecta el contexto de las pruebas de la app de finalizar compra"""
+    finalizar_compra_page = FinalizarCompraPage(page)
+    yield finalizar_compra_page
+
+@pytest.fixture(scope="function")
+def app_recibo_pedido(page: Page) -> Generator[ReciboPedidoPage, None, None]:
+    """Inyecta el contexto de las pruebas de la app de recibo pedido"""
+    recibo_pedido_page = ReciboPedidoPage(page)
+    yield recibo_pedido_page

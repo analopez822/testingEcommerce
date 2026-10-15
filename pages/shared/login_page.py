@@ -13,7 +13,7 @@ class LoginPage(BasePage):
         self._entrar_llave_acceso: str = "Entrar con llave de acceso"
         self._texto: str = "Accede a tu cuenta para comprar y seguir tus pedidos."
         self._email: str = "input[name='email']"
-        self._password: str = "input[name='password']"   #"input[id='_r_q_-input']"
+        self._password: str = "input[name='password']"
         self._boton_ocultar_contrasenia: str = "Ocultar contraseña"
         self._boton_contrasenia: str = "Mostrar contraseña"
         self._boton_entrar: str = "Entrar"
@@ -22,7 +22,8 @@ class LoginPage(BasePage):
         self._login_fallido: str = "Email o contraseña incorrectos"
 
         # locators pagina super admin
-        self._login_exito: str = "Hola de nuevo, Super"
+        self._login_exito: str = "Hola de nuevo, "
+        self._icono_usuario: str = "SA"
 
         # locators popup de reset password
         self._reset_password: str = "Introduce tu email y te enviaremos un código."
