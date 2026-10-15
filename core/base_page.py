@@ -18,8 +18,8 @@ class BasePage:
         # global variables
         self._correo_super_admin: str = "superadmin@demo.com"
         self._contrasenia_super_admin: str = "ChangeMe!2026"
-        self._correo_admin: str = "xxxxx"
-        self._contrasenia_admin: str = "xxxxx"
+        self._correo_admin: str = "mihew16622@proguidex.com"
+        self._contrasenia_admin: str = "Contrasenia1234"
         self._correo_usuario: str = "animiri@yahoo.es"
         self._contrasenia_usuario: str = "Mirianota8"
         self._contrasenia_incorrecta: str = "Incorrecta"
