@@ -37,7 +37,8 @@ class TestLoginPage:
         expect(toast).to_be_visible()
 
     def test_entrar_con_llave_acceso(self, app_login: LoginPage, app_navegacion: NavegacionPage):
-        """ Requiere meter manualmente la contraseña del ordenador """
+        """ Requiere meter manualmente la contraseña del ordenador
+        Este es el unico usuario configurado para entrar con llave de acceso """
         app_login.navegar()
         app_navegacion.buscar_por_rol("link", name=app_navegacion._login_boton).click()
         expect(app_login.buscar_por_texto(app_login._texto)).to_be_visible()
@@ -47,7 +48,9 @@ class TestLoginPage:
         expect(toast).to_be_visible()
 
     # def test_reset_password(self, app_login: LoginPage, app_navegacion: NavegacionPage):
-    #     """ Requiere meter manualmente el codigo enviado al correo """
+    #     """ Requiere meter manualmente el codigo enviado al correo
+    #     Tambien requiere resetear manualmente la contrasenia cada vez que el test se ejecuta, para
+    #     que sea la misma que hay en la base_page """
     #     app_login.navegar()
     #     app_navegacion.buscar_por_rol("link", name=app_navegacion._login_boton).click()
     #     expect(app_login.buscar_por_texto(app_login._texto)).to_be_visible()
@@ -74,7 +77,7 @@ class TestLoginPage:
 
     # def test_reset_password_demasiados_intentos(self, app_login: LoginPage, app_navegacion: NavegacionPage):
     #     """ Crear codigo para 3 intentos fallidos de reset password, para que salga el popup demasiados intentos"""
-    #     app_login.navegar()    # terminar
+    #     app_login.navegar()    # requiere intentar cambiar la password varias veces manualmente para reprodocir escenario
     #     app_navegacion.buscar_por_rol("link", name=app_navegacion._login_boton).click()
     #     expect(app_login.buscar_por_texto(app_login._texto)).to_be_visible()
     #     app_login.buscar_por_rol("link", name=app_login._link_olvidaste_contrasenia).click()

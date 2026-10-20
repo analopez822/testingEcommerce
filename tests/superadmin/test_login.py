@@ -48,7 +48,8 @@ class TestLoginPage:
         app_login.page.wait_for_timeout(2000)
 
     # def test_crear_cuenta(self, app_login: LoginPage, app_navegacion: NavegacionPage):
-    #     """ Requiere meter manualmente el nuevo correo electronico y el codigo enviado al correo """
+    #     """ Requiere meter manualmente el nuevo correo electronico y el codigo enviado al correo
+    #     Este test esta comentado porque no quiero crear cuentas temporales todo el tiempo (con https://temp-mail.org/en/)"""
     #     app_login.navegar()
     #     app_navegacion.buscar_por_rol("link", name=app_navegacion._login_boton).click()
     #     expect(app_login.buscar_por_texto(app_login._texto)).to_be_visible()

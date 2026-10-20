@@ -13,9 +13,9 @@ class FinalizarCompraPage(BasePage):
         self._texto_finalizar_compra: str = "Finalizar compra"
         self._nombre: str = 'input[name="fullName"]'      # input data-slot="input" name=fullName   'fullName'
         # self._nombre: str = 'label[name="Nombre y apellidos"]'      # label data-slot="field-label"  "Nombre y apellidos"
-        self._direccion: str = 'input[name="street"]'
+        self._direccion: str = 'input[id="street"]'
         self._codigo_postal: str = 'input[name="postalCode"]'
-        self._ciudad: str = 'input[name="city"]'
+        self._ciudad: str = "input[placeholder='Buscar ciudad']"   # CAMBIO!  "Elige tu ciudad"   #'input[name="city"]'
         # self._pais: str =  this is disabled!!
         self._provincia: str = 'input[name="province"]'
         self._telefono: str = 'input[name="phone"]'
@@ -25,8 +25,11 @@ class FinalizarCompraPage(BasePage):
         self._cancelar_compra_boton: str = "Cancelar compra"
         self._direccion_guardada: str = "Dirección guardada"
         self._tarjeta_boton: str = "Tarjeta, Apple Pay o Google Pay"
+        self._pedido_creado: str = " creado"
 
-        # locators pagina confirmacion de pedido
+        # locators pagina checkboxes
+        self._condiciones: str = "#accept-terms"
+        self._desistimiento: str = "#accept-withdrawal"
 
         # locators pagina cancelar compra
         self._cancelar_dialogo: str = "¿Cancelar la compra?"
