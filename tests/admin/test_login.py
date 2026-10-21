@@ -37,7 +37,9 @@ class TestLoginPage:
         expect(toast).to_be_visible()
 
     # def test_reset_password(self, app_login: LoginPage, app_navegacion: NavegacionPage):
-    #     """ Requiere meter manualmente el codigo enviado al correo """
+    #     """ Requiere meter manualmente el codigo enviado al correo.
+    #     Como usamos email temporales, esto debe hacerse en 10 mins, antes de que caduquen.
+    #     Por esta razon este test esta comentado """
     #     app_login.navegar()
     #     app_navegacion.buscar_por_rol("link", name=app_navegacion._login_boton).click()
     #     expect(app_login.buscar_por_texto(app_login._texto)).to_be_visible()
