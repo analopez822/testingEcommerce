@@ -21,6 +21,8 @@ class FinalizarCompraPage(BasePage):
         self._telefono: str = 'input[name="phone"]'
         self._notas_entrega: str = 'textarea[name="notes"]'
         self._guardar_direccion_boton: str = "Guardar dirección"
+        self._otras_direcciones: str = "Tus direcciones"
+        self._boton_otra_direccion: str = "Usar otra dirección"
         self._confirmar_pedido_boton: str = "Confirmar pedido"
         self._cancelar_compra_boton: str = "Cancelar compra"
         self._direccion_guardada: str = "Dirección guardada"

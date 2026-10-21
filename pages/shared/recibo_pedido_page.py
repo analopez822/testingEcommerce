@@ -11,4 +11,4 @@ class ReciboPedidoPage(BasePage):
 
         # locators pagina recibo pedido
         self._texto_recibo: str = "Recibo del pedido"
-        self._texto_producto_pagado: str = "Producto"
+        self._texto_producto_pagado: str = "Pago confirmado (stripe)"
