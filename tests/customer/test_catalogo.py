@@ -11,6 +11,21 @@ from pages.shared.navegacion_page import NavegacionPage
 class TestCatalogoPage:
     """Suite de pruebas para la pagina catálogo"""
 
+    def rellenar_formulario_direccion(self, app_finalizar_compra: FinalizarCompraPage):
+        # podia pasar todos los datos por parametros, de momento no lo hago
+        app_finalizar_compra.fill_box(app_finalizar_compra._nombre, "Ana Maria")
+        app_finalizar_compra.page.locator("button[role='combobox']").nth(1).click()
+        app_finalizar_compra.fill_box(app_finalizar_compra._ciudad, "Madrid")
+        app_finalizar_compra.page.locator("ul[class='max-h-64 overflow-y-auto p-1']").locator(
+            "button").first.click()
+        app_finalizar_compra.fill_box(app_finalizar_compra._direccion, "Calle Falsa 123")
+        app_finalizar_compra.fill_box(app_finalizar_compra._codigo_postal, "12345")
+        app_finalizar_compra.fill_box(app_finalizar_compra._provincia, "Madrid")
+        app_finalizar_compra.fill_box(app_finalizar_compra._telefono, "123456789")
+        app_finalizar_compra.fill_box(app_finalizar_compra._notas_entrega, "Notas de entrega")
+        app_finalizar_compra.click_boton(app_finalizar_compra._guardar_direccion_boton)
+        expect(app_finalizar_compra.buscar_por_texto(app_finalizar_compra._direccion_guardada)).to_be_visible()
+
     def test_compra_sin_pago(self, app_login: LoginPage, app_navegacion: NavegacionPage, app_catalogo: CatalogoPage, app_finalizar_compra: FinalizarCompraPage, app_recibo_pedido: ReciboPedidoPage):
         # abro en browser, hago click en Catalogo y una search de chocorramo
         app_login.navegar()
@@ -38,17 +53,12 @@ class TestCatalogoPage:
         expect(toast).to_be_visible()
         expect(app_finalizar_compra.buscar_por_texto(app_finalizar_compra._texto_finalizar_compra)).to_be_visible()
         # rellenando 'Finalizar compra', guardando direccion y verificando toast 'direccion guardada'
-        app_finalizar_compra.fill_box(app_finalizar_compra._nombre, "Ana Maria")
-        app_finalizar_compra.page.locator("button[role='combobox']").nth(1).click()
-        app_finalizar_compra.fill_box(app_finalizar_compra._ciudad, "Madrid")
-        app_finalizar_compra.page.locator("ul[class='max-h-64 overflow-y-auto p-1']").locator("button").first.click()
-        app_finalizar_compra.fill_box(app_finalizar_compra._direccion, "Calle Falsa 123")
-        app_finalizar_compra.fill_box(app_finalizar_compra._codigo_postal, "12345")
-        app_finalizar_compra.fill_box(app_finalizar_compra._provincia, "Madrid")
-        app_finalizar_compra.fill_box(app_finalizar_compra._telefono, "123456789")
-        app_finalizar_compra.fill_box(app_finalizar_compra._notas_entrega, "Notas de entrega")
-        app_finalizar_compra.click_boton(app_finalizar_compra._guardar_direccion_boton)
-        expect(app_finalizar_compra.buscar_por_texto(app_finalizar_compra._direccion_guardada)).to_be_visible()
+        boton_otras_direcciones = app_finalizar_compra.buscar_por_texto(app_finalizar_compra._otras_direcciones)
+        if boton_otras_direcciones.count() > 0:
+            app_finalizar_compra.buscar_por_rol("button", app_finalizar_compra._boton_otra_direccion).click()
+            self.rellenar_formulario_direccion(app_finalizar_compra)
+        else:
+            self.rellenar_formulario_direccion(app_finalizar_compra)
         # click 'Confirmar pedido' y verificar pagina recibo abierta
         app_finalizar_compra.encontrar(app_finalizar_compra._condiciones).check()
         app_finalizar_compra.encontrar(app_finalizar_compra._desistimiento).click()
@@ -77,8 +87,8 @@ class TestCatalogoPage:
         # app_catalogo.buscar_por_rol("link", name=app_catalogo._boton_finalizar_compra).click()  ==> igual que linea 28
         expect(app_login.buscar_por_texto(app_login._texto)).to_be_visible()
         # rellenando formulario login y verificando pantalla 'Finalizar compra' aparece
-        app_login.fill_box(app_login._email, app_login._correo_super_admin)
-        app_login.fill_box(app_login._password, app_login._contrasenia_super_admin)
+        app_login.fill_box(app_login._email, app_login._correo_usuario)
+        app_login.fill_box(app_login._password, app_login._contrasenia_usuario)
         app_login.buscar_por_rol("button", name=app_login._boton_entrar).nth(1).click()
         toast = app_login.buscar_por_texto(app_login._login_exito)
         expect(toast).to_be_visible()
@@ -89,30 +99,9 @@ class TestCatalogoPage:
         print(boton_otras_direcciones.count())
         if boton_otras_direcciones.count() > 0:
             app_finalizar_compra.buscar_por_rol("button", app_finalizar_compra._boton_otra_direccion).click()
-            app_finalizar_compra.fill_box(app_finalizar_compra._nombre, "Ana Maria")
-            app_finalizar_compra.page.locator("button[role='combobox']").nth(1).click()
-            app_finalizar_compra.fill_box(app_finalizar_compra._ciudad, "Madrid")
-            app_finalizar_compra.page.locator("ul[class='max-h-64 overflow-y-auto p-1']").locator(
-                "button").first.click()
-            app_finalizar_compra.fill_box(app_finalizar_compra._direccion, "Calle Falsa 123")
-            app_finalizar_compra.fill_box(app_finalizar_compra._codigo_postal, "12345")
-            app_finalizar_compra.fill_box(app_finalizar_compra._provincia, "Madrid")
-            app_finalizar_compra.fill_box(app_finalizar_compra._telefono, "123456789")
-            app_finalizar_compra.fill_box(app_finalizar_compra._notas_entrega, "Notas de entrega")
-            app_finalizar_compra.click_boton(app_finalizar_compra._guardar_direccion_boton)
-            #expect(app_finalizar_compra.buscar_por_texto(app_finalizar_compra._direccion_guardada)).to_be_visible()
+            self.rellenar_formulario_direccion(app_finalizar_compra)
         else:
-         app_finalizar_compra.fill_box(app_finalizar_compra._nombre, "Ana Maria")
-         app_finalizar_compra.page.locator("button[role='combobox']").nth(1).click()
-         app_finalizar_compra.fill_box(app_finalizar_compra._ciudad, "Madrid")
-         app_finalizar_compra.page.locator("ul[class='max-h-64 overflow-y-auto p-1']").locator("button").first.click()
-         app_finalizar_compra.fill_box(app_finalizar_compra._direccion, "Calle Falsa 123")
-         app_finalizar_compra.fill_box(app_finalizar_compra._codigo_postal, "12345")
-         app_finalizar_compra.fill_box(app_finalizar_compra._provincia, "Madrid")
-         app_finalizar_compra.fill_box(app_finalizar_compra._telefono, "123456789")
-         app_finalizar_compra.fill_box(app_finalizar_compra._notas_entrega, "Notas de entrega")
-         app_finalizar_compra.click_boton(app_finalizar_compra._guardar_direccion_boton)
-         expect(app_finalizar_compra.buscar_por_texto(app_finalizar_compra._direccion_guardada)).to_be_visible() ####
+            self.rellenar_formulario_direccion(app_finalizar_compra)
         # click 'Confirmar pedido' y verificar pagina recibo abierta
         app_finalizar_compra.buscar_por_texto(app_finalizar_compra._tarjeta_boton).click()
         app_finalizar_compra.encontrar(app_finalizar_compra._condiciones).check()
@@ -165,17 +154,12 @@ class TestCatalogoPage:
         expect(toast).to_be_visible()
         expect(app_finalizar_compra.buscar_por_texto(app_finalizar_compra._texto_finalizar_compra)).to_be_visible()
         # rellenando 'Finalizar compra', guardando direccion y verificando toast 'direccion guardada'
-        app_finalizar_compra.fill_box(app_finalizar_compra._nombre, "Ana Maria")
-        app_finalizar_compra.page.locator("button[role='combobox']").nth(1).click()
-        app_finalizar_compra.fill_box(app_finalizar_compra._ciudad, "Madrid")
-        app_finalizar_compra.page.locator("ul[class='max-h-64 overflow-y-auto p-1']").locator("button").first.click()
-        app_finalizar_compra.fill_box(app_finalizar_compra._direccion, "Calle Falsa 123")
-        app_finalizar_compra.fill_box(app_finalizar_compra._codigo_postal, "12345")
-        app_finalizar_compra.fill_box(app_finalizar_compra._provincia, "Madrid")
-        app_finalizar_compra.fill_box(app_finalizar_compra._telefono, "123456789")
-        app_finalizar_compra.fill_box(app_finalizar_compra._notas_entrega, "Notas de entrega")
-        app_finalizar_compra.click_boton(app_finalizar_compra._guardar_direccion_boton)
-        expect(app_finalizar_compra.buscar_por_texto(app_finalizar_compra._direccion_guardada)).to_be_visible()
+        boton_otras_direcciones = app_finalizar_compra.buscar_por_texto(app_finalizar_compra._otras_direcciones)
+        if boton_otras_direcciones.count() > 0:
+            app_finalizar_compra.buscar_por_rol("button", app_finalizar_compra._boton_otra_direccion).click()
+            self.rellenar_formulario_direccion(app_finalizar_compra)
+        else:
+            self.rellenar_formulario_direccion(app_finalizar_compra)
         # click 'Cancelar comprar' y verificar toast de compra cancelada
         app_finalizar_compra.click_boton(app_finalizar_compra._cancelar_compra_boton)
         expect(app_finalizar_compra.buscar_por_texto(app_finalizar_compra._cancelar_dialogo)).to_be_visible()
