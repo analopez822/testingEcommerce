@@ -18,6 +18,8 @@ PREFIJO_ARCHIVO = "test_"
 
 # page.pause()
 
+print("Hola mundo!!!");
+
 
 @dataclass
 class ArchivoPrueba:
