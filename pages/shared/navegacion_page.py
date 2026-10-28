@@ -16,7 +16,10 @@ class NavegacionPage(BasePage):
         self._contraste_oscuro_boton: str = "Cambiar a tema claro"
         self._contraste_claro_boton: str = "Cambiar a tema oscuro"
         self._carrito_boton: str = "Abrir carrito"  # "/carrito"   #'[aria-label="Abrir carrito"]'
-        self._login_boton:str = "Iniciar sesión"
+        self._login_boton: str = "Iniciar sesión"
+        self._menu_usuario_boton: str = "Menú de usuario"
+        self._mi_cuenta: str = "Mi cuenta"
+        self._cerrar_sesion: str = "Cerrar sesion"
 
 
     def click_boton_contraste(self, status: str) -> None:

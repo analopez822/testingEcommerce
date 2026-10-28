@@ -18,7 +18,7 @@ class BasePage:
         # global variables
         self._correo_super_admin: str = "superadmin@demo.com"
         self._contrasenia_super_admin: str = "ChangeMe!2026"
-        self._correo_admin: str = "mihew16622@proguidex.com"
+        self._correo_admin: str = "poticib705@playfine.com"
         self._contrasenia_admin: str = "Contrasenia1234"
         self._correo_usuario: str = "animiri@yahoo.es"
         self._contrasenia_usuario: str = "Mirianota8"
@@ -39,8 +39,8 @@ class BasePage:
     def buscar_por_placeholder(self, texto: str) -> Locator:
         return self.page.get_by_placeholder(texto)
 
-    def buscar_por_rol(self, rol: str, name: str = None) -> Locator:
-        return self.page.get_by_role(rol, name=name)
+    def buscar_por_rol(self, rol: str, name: str = None, exact: bool = None) -> Locator:
+        return self.page.get_by_role(rol, name=name, exact=exact)
 
     def fill_box(self, locator: str, text: str) -> None:
         self.page.locator(locator).fill(text)
