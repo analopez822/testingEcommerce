@@ -26,6 +26,7 @@ class FinalizarCompraPage(BasePage):
         self._confirmar_pedido_boton: str = "Confirmar pedido"
         self._cancelar_compra_boton: str = "Cancelar compra"
         self._direccion_guardada: str = "Dirección guardada"
+        self._direccion_actualizada: str = "Dirección actualizada"
         self._tarjeta_boton: str = "Tarjeta, Apple Pay o Google Pay"
         self._pedido_creado: str = " creado"
 
