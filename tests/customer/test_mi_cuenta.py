@@ -46,7 +46,7 @@ class TestMiCuentaPage:
         app_login.navegar()
         app_navegacion.buscar_por_rol("link", name=app_navegacion._login_boton).click()
         expect(app_login.buscar_por_texto(app_login._texto)).to_be_visible()
-        app_login.fill_box(app_login._email, app_mi_cuenta._correo_admin)
+        app_login.fill_box(app_login._email, app_mi_cuenta._correo_usuario)
         app_login.fill_box(app_login._password, app_login._contrasenia_usuario)
         app_login.buscar_por_rol("button", name=app_login._boton_entrar).nth(1).click()
         toast = app_login.buscar_por_texto(app_login._login_exito)
@@ -74,8 +74,10 @@ class TestMiCuentaPage:
         # app_login.page.wait_for_timeout(2000)
 
         # Descargando json file desde Descargar mis Datos
-        #app_mi_cuenta.click_boton(app_mi_cuenta._boton_descargar_json)
-        # como seguir aqui??
+        ruta_datos = app_mi_cuenta.descargar_archivo_json(app_mi_cuenta._boton_descargar_json)
+        assert ruta_datos.exists(), f"El archivo json no existe en el directorio: {ruta_datos}"
+        print(f"Datos descargados en: {ruta_datos}")
+        app_mi_cuenta.abrir_archivo(ruta_datos)
 
         # Eliminando cuenta desde Eliminar Cuenta
         app_mi_cuenta.fill_box(app_mi_cuenta._porque_te_vas, "Me doy de baja")
@@ -88,7 +90,7 @@ class TestMiCuentaPage:
         codigo_baja = input("Escribe el código de verificacion de cambio de cuenta que te hemos enviado.")
         app_mi_cuenta.fill_box(app_mi_cuenta._codigo_verificacion_correo, codigo_baja)
         app_mi_cuenta.click_boton(app_mi_cuenta._boton_confirmar_baja)
-        expect(app_mi_cuenta.buscar_por_texto(app_mi_cuenta._baja_confirmada_mensaje)).to_be_visible()
+        expect(app_mi_cuenta.buscar_por_texto(app_mi_cuenta._baja_confirmada_mensaje).first).to_be_visible()
         app_mi_cuenta.click_boton(app_mi_cuenta._boton_cancelar_baja)
         expect(app_mi_cuenta.buscar_por_texto(app_mi_cuenta._baja_cancelada)).to_be_visible()
         app_mi_cuenta.page.wait_for_timeout(2000)
