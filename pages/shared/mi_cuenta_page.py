@@ -66,6 +66,7 @@ class MiCuentaPage(BasePage):
         self._dialogo_pago_prueba: str = "Esta pantalla imita a la pasarela real: elige el resultado y vuelve a la tienda."
         self._boton_pago_correcto: str = "Simular pago correcto"
         self._pago_completado: str = "Pago completado"
+        self._boton_pagar_tajeta_apple_google: str = "Tarjeta, Apple Pay o Google Pay"
 
         # locators para Direcciones
         self._direcciones_header: str = 'Las que te proponemos al finalizar la compra.'
