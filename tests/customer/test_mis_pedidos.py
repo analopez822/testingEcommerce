@@ -5,6 +5,7 @@ from conftest import app_login, app_navegacion, app_mi_cuenta
 from pages.shared.login_page import LoginPage
 from pages.shared.navegacion_page import NavegacionPage
 from pages.shared.mi_cuenta_page import MiCuentaPage
+from pages.shared.pago_tarjeta_page import PagoTarjetaPage
 
 
 class TestMisPedidosPage:
@@ -25,7 +26,7 @@ class TestMisPedidosPage:
         # abriendo Mis Pedidos y comprobando header
         app_mi_cuenta.click_link(app_mi_cuenta._mis_pedidos)
         expect(app_mi_cuenta.buscar_por_texto(app_mi_cuenta._pedidos_header)).to_be_visible()
-        # contando items en las lista y comprobando que no esta vacia
+        # contando items en la lista y comprobando que no esta vacia
         lista_pedidos = app_mi_cuenta.encontrar("ul[class='flex flex-col gap-3'] > li")   # CSS selector
         cuenta_pedidos = lista_pedidos.count()
 
@@ -53,6 +54,54 @@ class TestMisPedidosPage:
         app_mi_cuenta.click_boton(app_mi_cuenta._boton_pago_correcto)
         expect(app_mi_cuenta.buscar_por_texto(app_mi_cuenta._pago_completado)).to_be_visible()
         app_mi_cuenta.page.wait_for_timeout(3000)
+
+    def test_mis_pedidos_pago_klarna(self, app_login: LoginPage, app_navegacion: NavegacionPage, app_mi_cuenta: MiCuentaPage, app_pago_tarjeta: PagoTarjetaPage):
+        # necesita que exista un pago pendiente, y que sea el primero de la lista
+        self.mis_pedidos(app_login, app_navegacion, app_mi_cuenta)
+        pedido1 = app_mi_cuenta.buscar_por_texto("Pedido P-2026").first.text_content()
+        print(pedido1)
+        app_mi_cuenta.buscar_por_rol("link", name=app_mi_cuenta._boton_ver_detalle).first.click()
+        expect(app_mi_cuenta.buscar_por_texto(app_mi_cuenta._link_volver_a_pedidos)).to_be_visible()
+        app_mi_cuenta.click_boton(app_mi_cuenta._boton_pagar_tajeta_apple_google)
+
+        # rellenando detalles Klarna
+        expect(app_pago_tarjeta.buscar_por_texto(app_pago_tarjeta._formulario_pago_tarjeta).first).to_be_visible()
+
+        card_iframe = app_pago_tarjeta.page.frame_locator("iframe[title='Campo de entrada seguro para el pago']")
+        boton_pagar = app_pago_tarjeta.buscar_por_texto("Pagar ")
+        card_iframe.locator("button[id='klarna-tab']").click()
+        boton_pagar.nth(4).click()     # not that reliable
+        app_mi_cuenta.page.wait_for_timeout(2000)
+        expect(app_pago_tarjeta.buscar_por_texto("We're here to make payments simple and flexible. Let's verify your number.")).to_be_visible()
+        app_mi_cuenta.fill_box("input[id='phone']", '+34695258314')
+        app_mi_cuenta.encontrar("button[id='onContinue']").click()
+        expect(app_mi_cuenta.buscar_por_texto("Enter the 6-digit code")).to_be_visible()
+        # expect(app_mi_cuenta.buscar_por_texto("You'll get the code in a few seconds via text")).to_be_visible()
+        caja_codigo = app_mi_cuenta.fill_box("input[id='otp_field']", "000000")
+        app_mi_cuenta.page.wait_for_timeout(2000)
+
+
+    def test_mis_pedidos_pago_paypal(self, app_login: LoginPage, app_navegacion: NavegacionPage, app_mi_cuenta: MiCuentaPage, app_pago_tarjeta: PagoTarjetaPage):
+        # necesita que exista un pago pendiente, y que sea el primero de la lista
+        self.mis_pedidos(app_login, app_navegacion, app_mi_cuenta)
+        pedido1 = app_mi_cuenta.buscar_por_texto("Pedido P-2026").first.text_content()
+        print(pedido1)
+        app_mi_cuenta.buscar_por_rol("link", name=app_mi_cuenta._boton_ver_detalle).first.click()
+        expect(app_mi_cuenta.buscar_por_texto(app_mi_cuenta._link_volver_a_pedidos)).to_be_visible()
+        app_mi_cuenta.click_boton(app_mi_cuenta._boton_pagar_tajeta_apple_google)
+
+        # rellenando detalles Google Pay
+        expect(app_pago_tarjeta.buscar_por_texto(app_pago_tarjeta._formulario_pago_tarjeta).first).to_be_visible()
+
+        card_iframe = app_pago_tarjeta.page.frame_locator("iframe[title='Campo de entrada seguro para el pago']")
+        boton_pagar = app_pago_tarjeta.buscar_por_texto("Pagar ")
+        card_iframe.locator("button[id='paypal-tab']").click()
+        app_mi_cuenta.page.wait_for_timeout(2000)
+        expect(app_pago_tarjeta.buscar_por_texto("Se ha seleccionado PayPal.")).to_be_visible()
+        boton_pagar.nth(4).click()     # not that reliable
+        expect(app_pago_tarjeta.buscar_por_texto("Paypal test payment page")).to_be_visible()
+        # app_mi_cuenta.encontrar("button[id='authorize-test-payment-button']").click()  #data-testid!!!
+        app_mi_cuenta.page.wait_for_timeout(2000)
 
 
     def test_mis_pedidos_descargar_recibo_chat(self, app_login: LoginPage, app_navegacion: NavegacionPage, app_mi_cuenta: MiCuentaPage):
