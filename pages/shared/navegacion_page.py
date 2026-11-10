@@ -19,6 +19,7 @@ class NavegacionPage(BasePage):
         self._login_boton: str = "Iniciar sesión"
         self._menu_usuario_boton: str = "Menú de usuario"
         self._mi_cuenta: str = "Mi cuenta"
+        self._administracion: str = "Administración"
         self._cerrar_sesion: str = "Cerrar sesion"
 
 
