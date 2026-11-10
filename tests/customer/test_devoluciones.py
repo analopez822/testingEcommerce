@@ -45,6 +45,9 @@ class TestDevolucionesPage:
 
     def test_solicitar_devolucion(self, app_login: LoginPage, app_navegacion: NavegacionPage, app_mi_cuenta: MiCuentaPage):
         # este test necesita que haya al menos un pedido en la lista de pedidos
+        # tambien necesita que el numero de la devolucion sea manualmente actualizado, para que coincida con el pedido a devolver
+        # se requiere que haya una sesion abierta para el usuario, y ver la lista de pedidos
+        # y una segunda sesion para el super admin, para ver Devoluciones y aprobarlas
         TestMisPedidosPage().mis_pedidos(app_login, app_navegacion, app_mi_cuenta)
         pedido1 = app_mi_cuenta.buscar_por_texto("Pedido P-2026").first.text_content()
         print(pedido1)
@@ -64,7 +67,7 @@ class TestDevolucionesPage:
         admin_navegacion = NavegacionPage(browser2)    # pasando nuevo contexto a clases involucradas en test
         admin_login = LoginPage(browser2)
         admin_mi_cuenta = MiCuentaPage(browser2)
-        admin_login.navegar()                          # ???? no entiendo pasar viejo contexto a la nueva ventana incognito
+        admin_login.navegar()
         admin_navegacion.buscar_por_rol("link", name=admin_navegacion._login_boton).click()
         expect(admin_login.buscar_por_texto(admin_login._texto)).to_be_visible()
         admin_login.fill_box(admin_login._email, admin_mi_cuenta._correo_super_admin)
@@ -77,8 +80,8 @@ class TestDevolucionesPage:
         # abriendo Devoluciones y aprobando la solicitud de devolucion
         admin_mi_cuenta.click_link(admin_mi_cuenta._devoluciones)
         expect(admin_mi_cuenta.buscar_por_texto(admin_mi_cuenta._devoluciones_superadmin_header)).to_be_visible()
-        # click en acciones de la primera devolucion y despues click en Aprobar
-        admin_mi_cuenta.buscar_por_rol("row", name="P-2026-4255 Ana Redondo").get_by_label("Acciones").click()
+        # click en acciones (icono tres puntos) de la primera devolucion y despues click en Aprobar
+        admin_mi_cuenta.buscar_por_rol("row", name="P-2026-4274 Ana Redondo").get_by_label("Acciones").click()
         admin_mi_cuenta.buscar_por_rol("menuitem", name="Aprobar").click()
         # comprueba que dialogo para aprobar devolucion esta visible y escribe mensaje para el cliente
         expect(admin_mi_cuenta.buscar_por_texto(admin_mi_cuenta._dialogo_aprobar_devolucion)).to_be_visible()
@@ -87,11 +90,11 @@ class TestDevolucionesPage:
         admin_mi_cuenta.buscar_por_rol("button", name="Aprobar").click()
         expect(admin_mi_cuenta.buscar_por_texto(admin_mi_cuenta._devolucion_aprobada)).to_be_visible()
         # click en acciones de la primera devolucion otra vez y despues click en 'Marcar como recibida'
-        admin_mi_cuenta.buscar_por_rol("row", name="P-2026-4255 Ana Redondo").get_by_label("Acciones").click()
+        admin_mi_cuenta.buscar_por_rol("row", name="P-2026-4274 Ana Redondo").get_by_label("Acciones").click()
         admin_mi_cuenta.buscar_por_rol("menuitem", name="Marcar como recibida").click()
         expect(admin_mi_cuenta.buscar_por_texto(admin_mi_cuenta._stock_repuesto)).to_be_visible()
         # click en acciones de la primera devolucion (por tercera vez) y despues click en Reembolsar
-        admin_mi_cuenta.buscar_por_rol("row", name="P-2026-4255 Ana Redondo").get_by_label("Acciones").click()
+        admin_mi_cuenta.buscar_por_rol("row", name="P-2026-4274 Ana Redondo").get_by_label("Acciones").click()
         admin_mi_cuenta.buscar_por_rol("menuitem", name="Reembolsar").click()
         # comprueba que dialogo para reembolsar devolucion esta visible y click en boton Reembolsar
         expect(admin_mi_cuenta.buscar_por_texto(admin_mi_cuenta._dialogo_reembolso)).to_be_visible()
@@ -100,6 +103,16 @@ class TestDevolucionesPage:
         expect(admin_mi_cuenta.buscar_por_texto(admin_mi_cuenta._dialogo_reembolso2)).to_be_visible()
         admin_mi_cuenta.buscar_por_rol("button", name=admin_mi_cuenta._boton_reembolsar).click()
         expect(admin_mi_cuenta.buscar_por_texto(admin_mi_cuenta._toast_confirmacion_reembolso)).to_be_visible()
-        admin_mi_cuenta.page.wait_for_timeout(5000)
+        # comprobando en primer browser que el pedido ha sido reembolsado
+        app_mi_cuenta.page.bring_to_front()
+        # expect(app_mi_cuenta.buscar_por_texto("Reembolsado")).to_be_visible() # no funciona porque no se ha actualizado el estado
+        app_mi_cuenta.click_link(app_mi_cuenta._mis_pedidos)
+        contenedor_pedido = app_mi_cuenta.page.locator("ul[class='flex flex-col gap-3'] > li").first
+        expect(contenedor_pedido).to_contain_text("Reembolsado")
+        # las 3 lineas de abajo son una forma diferente de hacer lo mismo que las dos lineas de arriba
+        # app_mi_cuenta.buscar_por_rol("link", name=app_mi_cuenta._boton_ver_detalle).first.click()
+        # expect(app_mi_cuenta.buscar_por_texto(app_mi_cuenta._link_volver_a_pedidos)).to_be_visible()
+        # expect(app_mi_cuenta.buscar_por_texto("Reembolsado").first).to_be_visible()
+
 
 

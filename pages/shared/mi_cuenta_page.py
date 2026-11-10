@@ -45,6 +45,7 @@ class MiCuentaPage(BasePage):
         self._direcciones: str = "Direcciones"
         self._metodos_pago: str = 'Métodos de pago'
         self._devoluciones: str = 'Devoluciones'
+        self._chat: str = 'Chat'
         self._suscripcion: str = 'Suscripción'
         self._juega_gana: str = 'Juega y gana'
         self._seguridad: str = 'Seguridad'
@@ -98,3 +99,7 @@ class MiCuentaPage(BasePage):
         self._reembolso_confirmado: str = "Reembolso enviado"
         self._dialogo_reembolso2: str = "Reembolsar la devolución"
         self._toast_confirmacion_reembolso: str = "Reembolso enviado"
+
+        # locators para chat
+        self._boton_chat_usuario: str = "button[class*='flex flex-col gap-0.5']" # "[data-slot='card-content'] button"
+        self._mensajes_en_chat: str = "section[role='dialog'][aria-label='Chat con la tienda']"
