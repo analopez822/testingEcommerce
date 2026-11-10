@@ -67,6 +67,9 @@ class MiCuentaPage(BasePage):
         self._boton_pago_correcto: str = "Simular pago correcto"
         self._pago_completado: str = "Pago completado"
         self._boton_pagar_tajeta_apple_google: str = "Tarjeta, Apple Pay o Google Pay"
+        self._boton_devolver_pedido: str = "Devolver"
+        self._dialogo_devolver_pedido: str = "Cuéntanos qué ha pasado. Revisaremos la solicitud y te diremos cómo enviarlo."
+        self._motivo_devolucion: str = "textarea[name='reason']"
 
         # locators para Direcciones
         self._direcciones_header: str = 'Las que te proponemos al finalizar la compra.'
@@ -75,6 +78,23 @@ class MiCuentaPage(BasePage):
         self._confirmacion_direccion_eliminada: str = "Dirección eliminada"
         self._boton_editar: str = "Editar"
         self._dialogo_editar: str = "Solo enviamos a países de la Unión Europea."
+        self._boton_enviar_solicitud: str = "Enviar solicitud"
+        self._confirmacion_solicitud_devolucion: str = "Solicitud enviada"
+        self._no_mas_devoluciones: str = "Este pedido ya no admite devoluciones."
+
 
         # locators para Devoluciones
-        self._devoluciones_header: str = 'Lo que has pedido devolver y en qué punto está.'
+        self._devoluciones_usuario_header: str = 'Lo que has pedido devolver y en qué punto está.'
+        self._devoluciones_superadmin_header: str = 'Solicitudes de los clientes y su resolución.'
+        self._dialogo_aprobar_devolucion: str = "Mensaje para el cliente"
+        self._devolucion_aprobada: str = "Devolución aprobada"
+        self._dialogo_reembolso: str = "Devolución del pedido "
+        self._stock_repuesto: str = "Recibida: stock repuesto"
+        self._boton_reembolsar: str = "Reembolsar"
+        self._dialogo_confirmar_reembolso: str = "Reembolsar la devolución"
+        self._caja_aprobar_devolucion: str = "textarea[name='note']"
+        self._boton_aprobar_devolucion: str = "Aprobar"
+        self._dialogo_reembolso: str = "Por defecto se devuelve el precio de las unidades menos la comisión de la política."
+        self._reembolso_confirmado: str = "Reembolso enviado"
+        self._dialogo_reembolso2: str = "Reembolsar la devolución"
+        self._toast_confirmacion_reembolso: str = "Reembolso enviado"
