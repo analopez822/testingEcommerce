@@ -81,7 +81,7 @@ class TestDevolucionesPage:
         admin_mi_cuenta.click_link(admin_mi_cuenta._devoluciones)
         expect(admin_mi_cuenta.buscar_por_texto(admin_mi_cuenta._devoluciones_superadmin_header)).to_be_visible()
         # click en acciones (icono tres puntos) de la primera devolucion y despues click en Aprobar
-        admin_mi_cuenta.buscar_por_rol("row", name="P-2026-4274 Ana Redondo").get_by_label("Acciones").click()
+        admin_mi_cuenta.buscar_por_rol("row", name="P-2026-4285 Ana Redondo").get_by_label("Acciones").click()
         # las cuatro lineas de abajo las comentare contigo en la proxima clase
         # first_data_row = admin_mi_cuenta.encontrar(".ag-root .ag-row").nth(0)
         # # first_data_row = admin_mi_cuenta.encontrar(".ag-grid-pinned-right-cells .ag-row").nth(0) # same than line above, but more specific
@@ -95,11 +95,11 @@ class TestDevolucionesPage:
         admin_mi_cuenta.buscar_por_rol("button", name="Aprobar").click()
         expect(admin_mi_cuenta.buscar_por_texto(admin_mi_cuenta._devolucion_aprobada)).to_be_visible()
         # click en acciones de la primera devolucion otra vez y despues click en 'Marcar como recibida'
-        admin_mi_cuenta.buscar_por_rol("row", name="P-2026-4274 Ana Redondo").get_by_label("Acciones").click()
+        admin_mi_cuenta.buscar_por_rol("row", name="P-2026-4285 Ana Redondo").get_by_label("Acciones").click()
         admin_mi_cuenta.buscar_por_rol("menuitem", name="Marcar como recibida").click()
         expect(admin_mi_cuenta.buscar_por_texto(admin_mi_cuenta._stock_repuesto)).to_be_visible()
         # click en acciones de la primera devolucion (por tercera vez) y despues click en Reembolsar
-        admin_mi_cuenta.buscar_por_rol("row", name="P-2026-4274 Ana Redondo").get_by_label("Acciones").click()
+        admin_mi_cuenta.buscar_por_rol("row", name="P-2026-4285 Ana Redondo").get_by_label("Acciones").click()
         admin_mi_cuenta.buscar_por_rol("menuitem", name="Reembolsar").click()
         # comprueba que dialogo para reembolsar devolucion esta visible y click en boton Reembolsar
         expect(admin_mi_cuenta.buscar_por_texto(admin_mi_cuenta._dialogo_reembolso)).to_be_visible()

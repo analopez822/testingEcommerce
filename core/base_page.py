@@ -20,7 +20,7 @@ class BasePage:
 
     def __init__(self, page: Page):
         self.incognito_page = None  # Page = page???
-        self.page : Page = page     # super().__init__(page)
+        self.page : Page = page     # super().__init__(page) ==> this is for child class
 
         # global variables
         self._correo_super_admin: str = "superadmin@demo.com"
@@ -44,7 +44,7 @@ class BasePage:
         return self.incognito_page
 
     def encontrar(self, selector: str) -> Locator:
-        """ Centraliza la busqueda de elementos que tienen id  """
+        """ Centraliza la busqueda de elementos que tienen id """
         return self.page.locator(selector)
 
     def buscar_por_texto(self, texto: str) -> Locator:
