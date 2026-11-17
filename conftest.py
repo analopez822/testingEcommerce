@@ -49,7 +49,7 @@ def configuracion_global():
     print("\n[INFO] Finalizando ejecución y limpiando recursos...")
 
 
-@pytest.fixture(scope="function")
+@pytest.fixture(scope="function")     # this is called a decorator
 def app_login(page: Page) -> Generator[LoginPage, None, None]:
     """Inyecta el contexto de las pruebas de la app de login"""
     login_page = LoginPage(page)

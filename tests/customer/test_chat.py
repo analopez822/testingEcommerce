@@ -63,6 +63,7 @@ class TestChatPage:
         text = lista_mensajes.text_content()
         print(f"Ultimo mensaje en chat: {text}")
         expect(lista_mensajes).to_contain_text("Abre el pedido y haz click en Devolver")
+        app_mi_cuenta.page.wait_for_timeout(3000)
 
 
 
