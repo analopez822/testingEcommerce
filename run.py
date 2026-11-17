@@ -2,7 +2,7 @@ import os
 import sys
 import ast
 import argparse
-import pytest
+import subprocess
 from dataclasses import dataclass, field
 from pathlib import Path
 from typing import List, Optional
@@ -202,7 +202,12 @@ def ejecutar_pytest(objetivos: List[str], args: argparse.Namespace, debug: bool)
     argumentos_pytest = construir_argumentos(objetivos, args)
 
     print(f"\n[INFO] Ejecutando: pytest {' '.join(argumentos_pytest)}\n")
-    return int(pytest.main(argumentos_pytest))
+    # Proceso nuevo en cada ejecución: así se recargan tests, pages, core y conftest sin reiniciar el menú
+    try:
+        return subprocess.run([sys.executable, "-m", "pytest", *argumentos_pytest], cwd=RAIZ).returncode
+    except KeyboardInterrupt:   # Ctrl+C corta la prueba y vuelve al menú, no mata run.py
+        print("\n[AVISO] Ejecución interrumpida.")
+        return 130
 
 
 def validar_objetivos(objetivos: List[str]) -> List[str]:
