@@ -108,10 +108,11 @@ def menu_carpeta(carpeta: CarpetaPruebas, es_raiz: bool = False) -> Optional[str
     Menú de una carpeta: ejecutar todo su contenido, entrar a una subcarpeta o elegir un archivo.
     Devuelve el objetivo de pytest, o None si el usuario vuelve atrás.
     """
-    entradas = carpeta.subcarpetas + carpeta.archivos
     ruta_visible = ruta_relativa(carpeta.ruta)
 
     while True:
+        carpeta = descubrir_pruebas(carpeta.ruta) or carpeta   # archivos nuevos aparecen sin salir de la carpeta
+        entradas = carpeta.subcarpetas + carpeta.archivos
         print("\n==================================================")
         print(" FRAMEWORK DE EJECUCIÓN DINÁMICA DE PRUEBAS")
         print(f" Ubicación: {ruta_visible}")
@@ -157,6 +158,8 @@ def seleccionar_funcion(archivo: ArchivoPrueba) -> Optional[str]:
     ruta_archivo = ruta_relativa(archivo.ruta)
 
     while True:
+        if archivo.ruta.exists():
+            archivo = extraer_pruebas(archivo.ruta)   # pruebas nuevas aparecen sin salir del archivo
         print(f"\n--- Pruebas disponibles en {ruta_archivo} ---")
         print("0. Ejecutar todo el archivo")
 
