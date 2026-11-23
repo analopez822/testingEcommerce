@@ -1,50 +1,40 @@
-from playwright.sync_api import expect
+from pages.aplicacion import Aplicacion
 
-from conftest import app_navegacion
-from pages.shared.navegacion_page import NavegacionPage
 
 class TestNavegacionPage:
     """Suite de pruebas para la pagina de navegacion"""
 
-    def test_inicio(self, app_navegacion: NavegacionPage):
-        app_navegacion.navegar()
-        app_navegacion.buscar_por_texto(app_navegacion._inicio_boton).click()
-        expect(app_navegacion.buscar_por_texto("Todo lo que necesitas, a un clic")).to_be_visible()
+    def test_inicio(self, app: Aplicacion):
+        nav = app.navegacion
+        nav.navegar()
+        nav.buscar_por_texto(nav._inicio_boton).click()
+        nav.debe_ver("Todo lo que necesitas, a un clic")
 
-    def test_catalogo(self, app_navegacion: NavegacionPage):
-        app_navegacion.navegar()
-        app_navegacion.click_link(app_navegacion._catalogo_boton)
-        expect(app_navegacion.buscar_por_texto("Todo lo que tenemos a la venta.")).to_be_visible()
+    def test_catalogo(self, app: Aplicacion):
+        app.navegacion.navegar()
+        app.navegacion.ir_al_catalogo()
+        app.navegacion.debe_ver("Todo lo que tenemos a la venta.")
 
-    def test_novedades(self, app_navegacion: NavegacionPage):
-        app_navegacion.navegar()
-        app_navegacion.click_link(app_navegacion._novedades_boton)
-        expect(app_navegacion.buscar_por_texto("Lo último de la tienda.")).to_be_visible()
+    def test_novedades(self, app: Aplicacion):
+        nav = app.navegacion
+        nav.navegar()
+        nav.click_link(nav._novedades_boton)
+        nav.debe_ver("Lo último de la tienda.")
 
-    def test_contraste(self, app_navegacion: NavegacionPage):
-        app_navegacion.navegar()
-        app_navegacion.click_boton_contraste(status= app_navegacion._contraste_oscuro_boton)
-        app_navegacion.page.wait_for_timeout(2000)
-        app_navegacion.click_boton_contraste(status= app_navegacion._contraste_claro_boton)
-        app_navegacion.page.wait_for_timeout(2000)
+    def test_contraste(self, app: Aplicacion):
+        nav = app.navegacion
+        nav.navegar()
+        nav.click_boton_contraste(status=nav._contraste_oscuro_boton)
+        nav.page.wait_for_timeout(2000)
+        nav.click_boton_contraste(status=nav._contraste_claro_boton)
+        nav.page.wait_for_timeout(2000)
 
-    def test_carrito(self, app_navegacion: NavegacionPage):
-        app_navegacion.navegar()
-        app_navegacion.buscar_por_rol("link", name=app_navegacion._carrito_boton).click()
-        # app_navegacion.click_link(app_navegacion._carrito_boton) ==> cambiar a "self._carrito_boton: str = "/carrito"" en navegacion_page.py
-        # y uncomment esta linea en click_link() method de base_page.py: self.page.locator(f'a[href*="{texto}"]').click()
-        expect(app_navegacion.buscar_por_texto("Revisa lo que llevas antes de pasar por caja.")).to_be_visible()
+    def test_carrito(self, app: Aplicacion):
+        app.navegacion.navegar()
+        app.navegacion.abrir_carrito()
+        app.navegacion.debe_ver("Revisa lo que llevas antes de pasar por caja.")
 
-    def test_login(self, app_navegacion: NavegacionPage):
-        app_navegacion.navegar()
-        app_navegacion.buscar_por_rol("link", name=app_navegacion._login_boton).click()
-        expect(app_navegacion.buscar_por_texto("Iniciar sesión")).to_be_visible()
-
-
-
-
-
-
-
-
-
+    def test_login(self, app: Aplicacion):
+        app.navegacion.navegar()
+        app.navegacion.ir_a_login()
+        app.navegacion.debe_ver("Iniciar sesión")

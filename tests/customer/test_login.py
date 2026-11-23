@@ -1,108 +1,91 @@
-from playwright.sync_api import expect
+from core import config
+from pages.aplicacion import Aplicacion
 
-from conftest import app_login, app_navegacion
-from pages.shared.login_page import LoginPage
-from pages.shared.navegacion_page import NavegacionPage
 
 class TestLoginPage:
     """Suite de pruebas para la pagina login"""
 
-    def test_login_exito(self, app_login: LoginPage, app_navegacion: NavegacionPage):
-        app_login.debugger()
-        app_login.navegar()
-        app_navegacion.buscar_por_rol("link", name=app_navegacion._login_boton).click()
-        expect(app_login.buscar_por_texto(app_login._texto)).to_be_visible()
-        app_login.fill_box(app_login._email, app_login._correo_usuario)
-        app_login.fill_box(app_login._password, app_login._contrasenia_usuario)
-        app_login.buscar_por_rol("checkbox", name="Mantener la sesión en este dispositivo").click()
-        app_login.buscar_por_rol("checkbox", name="Mantener la sesión en este dispositivo").click()
-        app_login.buscar_por_rol("button", name=app_login._boton_entrar).nth(1).click()
-        toast = app_login.buscar_por_texto(app_login._login_exito)
-        expect(toast).to_be_visible()
-        app_login.click_boton("Menú de usuario")
-        expect(app_login.buscar_por_rol("menuitem", name="Mi cuenta")).to_be_visible()
-        expect(app_login.buscar_por_rol("menuitem", name="Administración")).not_to_be_visible()
-        expect(app_login.buscar_por_rol("menuitem", name="Configuración")).not_to_be_visible()
-        expect(app_login.buscar_por_rol("menuitem", name="Cerrar sesión")).to_be_visible()
-        app_login.page.wait_for_timeout(3000)
+    def test_login_exito(self, app: Aplicacion):
+        nav, login = app.navegacion, app.login
+        login.debugger()
+        login.navegar()
+        nav.ir_a_login()
+        login.debe_mostrar_formulario()
+        login.alternar_mantener_sesion()
+        login.alternar_mantener_sesion()
+        login.iniciar_sesion(config.usuario("customer"))
+        nav.comprobar_menu_usuario(
+            visibles=[nav._mi_cuenta, nav._cerrar_sesion],
+            ocultas=[nav._administracion, nav._configuracion],
+        )
+        login.page.wait_for_timeout(3000)
 
-    def test_login_fallido(self, app_login: LoginPage, app_navegacion: NavegacionPage):
-        app_login.navegar()
-        app_navegacion.buscar_por_rol("link", name=app_navegacion._login_boton).click()
-        expect(app_login.buscar_por_texto(app_login._texto)).to_be_visible()
-        app_login.fill_box(app_login._email, app_login._correo_usuario)
-        app_login.fill_box(app_login._password, app_login._contrasenia_incorrecta)
-        app_login.buscar_por_rol("button", name=app_login._boton_entrar).nth(1).click()
-        toast = app_login.buscar_por_texto(app_login._login_fallido)
-        expect(toast).to_be_visible()
+    def test_login_fallido(self, app: Aplicacion):
+        login = app.login
+        login.navegar()
+        app.navegacion.ir_a_login()
+        login.debe_mostrar_formulario()
+        login.enviar_credenciales(config.usuario("customer").email, config.CONTRASENIA_INCORRECTA)
+        login.debe_ver(login._login_fallido)
 
-    def test_entrar_con_llave_acceso(self, app_login: LoginPage, app_navegacion: NavegacionPage):
+    def test_entrar_con_llave_acceso(self, app: Aplicacion):
         """ Requiere meter manualmente la contraseña del ordenador
         Este es el unico usuario configurado para entrar con llave de acceso """
-        app_login.navegar()
-        app_navegacion.buscar_por_rol("link", name=app_navegacion._login_boton).click()
-        expect(app_login.buscar_por_texto(app_login._texto)).to_be_visible()
-        app_login.buscar_por_rol("button", name=app_login._entrar_llave_acceso).click()
-        app_login.page.wait_for_timeout(3000)
-        toast = app_login.buscar_por_texto("Hola de nuevo, Ana")
-        expect(toast).to_be_visible()
+        login = app.login
+        login.navegar()
+        app.navegacion.ir_a_login()
+        login.debe_mostrar_formulario()
+        login.buscar_por_rol("button", name=login._entrar_llave_acceso).click()
+        login.page.wait_for_timeout(3000)
+        login.debe_ver("Hola de nuevo, Ana")
 
-    # def test_reset_password(self, app_login: LoginPage, app_navegacion: NavegacionPage):
+    # def test_reset_password(self, app: Aplicacion):
     #     """ Requiere meter manualmente el codigo enviado al correo
     #     Tambien requiere resetear manualmente la contrasenia cada vez que el test se ejecuta, para
-    #     que sea la misma que hay en la base_page """
-    #     app_login.navegar()
-    #     app_navegacion.buscar_por_rol("link", name=app_navegacion._login_boton).click()
-    #     expect(app_login.buscar_por_texto(app_login._texto)).to_be_visible()
-    #     app_login.buscar_por_rol("link", name=app_login._link_olvidaste_contrasenia).click()
-    #     expect(app_login.buscar_por_texto(app_login._reset_password)).to_be_visible()
-    #     app_login.fill_box(app_login._email, app_login._correo_usuario)
-    #     app_login.buscar_por_rol("button", name=app_login._boton_enviar_codigo).click()
-    #     expect(app_login.buscar_por_texto(app_login._popup_introducir_codigo)).to_be_visible()
+    #     que sea la misma que hay en el .env """
+    #     login = app.login
+    #     usuario = config.usuario("customer")
+    #     login.navegar()
+    #     app.navegacion.ir_a_login()
+    #     login.debe_mostrar_formulario()
+    #     login.buscar_por_rol("link", name=login._link_olvidaste_contrasenia).click()
+    #     login.debe_ver(login._reset_password)
+    #     login.fill_box(login._email, usuario.email)
+    #     login.buscar_por_rol("button", name=login._boton_enviar_codigo).click()
+    #     login.debe_ver(login._popup_introducir_codigo)
     #     codigo = input("Introduce el código de verificación recibido por correo electrónico: ")
-    #     app_login.fill_box(app_login._caja_codigo, codigo)
-    #     app_login.buscar_por_rol("button", name=app_login._boton_continuar).click()
-    #     app_login.page.wait_for_timeout(3000)
-    #     expect(app_login.buscar_por_texto(app_login._contrasenia_nueva)).to_be_visible()
-    #     app_login.fill_box(app_login._contrasenia, app_login._password_string)
-    #     app_login.fill_box(app_login._repite_contrasenia, app_login._password_string)
-    #     app_login.buscar_por_rol("button", name=app_login._boton_guardar_contrasenia).click()
-    #     expect(app_login.buscar_por_texto(app_login._mensaje_contrasenia_actualizada)).to_be_visible()
-    #     app_login.fill_box(app_login._email, app_login._correo_usuario)
-    #     app_login.fill_box(app_login._password, app_login._password_string)
-    #     app_login.buscar_por_rol("button", name=app_login._boton_entrar).nth(1).click()
-    #     toast = app_login.buscar_por_texto(app_login._login_exito)
-    #     expect(toast).to_be_visible()
-    #     app_login.page.wait_for_timeout(4000)
+    #     login.fill_box(login._caja_codigo, codigo)
+    #     login.buscar_por_rol("button", name=login._boton_continuar).click()
+    #     login.page.wait_for_timeout(3000)
+    #     login.debe_ver(login._contrasenia_nueva)
+    #     login.fill_box(login._password, login._password_string)
+    #     login.fill_box(login._repite_contrasenia, login._password_string)
+    #     login.buscar_por_rol("button", name=login._boton_guardar_contrasenia).click()
+    #     login.debe_ver(login._mensaje_contrasenia_actualizada)
+    #     login.iniciar_sesion(Usuario("customer", usuario.email, login._password_string))   # from core.config import Usuario
+    #     login.page.wait_for_timeout(4000)
 
-    # def test_reset_password_demasiados_intentos(self, app_login: LoginPage, app_navegacion: NavegacionPage):
+    # def test_reset_password_demasiados_intentos(self, app: Aplicacion):
     #     """ Crear codigo para 3 intentos fallidos de reset password, para que salga el popup demasiados intentos"""
-    #     app_login.navegar()    # requiere intentar cambiar la password varias veces manualmente para reprodocir escenario
-    #     app_navegacion.buscar_por_rol("link", name=app_navegacion._login_boton).click()
-    #     expect(app_login.buscar_por_texto(app_login._texto)).to_be_visible()
-    #     app_login.buscar_por_rol("link", name=app_login._link_olvidaste_contrasenia).click()
-    #     expect(app_login.buscar_por_texto(app_login._reset_password)).to_be_visible()
-    #     app_login.fill_box(app_login._email, app_login._correo_usuario)
-    #     app_login.buscar_por_rol("button", name=app_login._boton_enviar_codigo).click()
-    #     #expect(app_login.buscar_por_texto(app_login._popup_introducir_codigo)).to_be_visible()
-    #     expect(app_login.buscar_por_texto(app_login._demasiados_intentos)).to_be_visible()
-    #     app_login.page.wait_for_timeout(4000)
+    #     login = app.login                    # requiere intentar cambiar la password varias veces manualmente para reprodocir escenario
+    #     login.navegar()
+    #     app.navegacion.ir_a_login()
+    #     login.debe_mostrar_formulario()
+    #     login.buscar_por_rol("link", name=login._link_olvidaste_contrasenia).click()
+    #     login.debe_ver(login._reset_password)
+    #     login.fill_box(login._email, config.usuario("customer").email)
+    #     login.buscar_por_rol("button", name=login._boton_enviar_codigo).click()
+    #     login.debe_ver(login._popup_demasiados_intentos)
+    #     login.page.wait_for_timeout(4000)
 
-    def test_reset_password_volver_a_iniciar_sesion(self, app_login: LoginPage, app_navegacion: NavegacionPage):
-        app_login.navegar()
-        app_navegacion.buscar_por_rol("link", name=app_navegacion._login_boton).click()
-        expect(app_login.buscar_por_texto(app_login._texto)).to_be_visible()
-        app_login.buscar_por_rol("link", name=app_login._link_olvidaste_contrasenia).click()
-        expect(app_login.buscar_por_texto(app_login._reset_password)).to_be_visible()
-        app_login.fill_box(app_login._email, app_login._correo_super_admin)
-        # app_login.buscar_por_rol("button", name=app_login._boton_enviar_codigo).click()
-        # expect(app_login.buscar_por_texto(app_login._popup_introducir_codigo)).to_be_visible()
-        app_login.buscar_por_rol("link", name=app_login._link_volver_a_iniciar_sesion).click()
-        expect(app_login.buscar_por_texto(app_login._texto)).to_be_visible()
-        app_login.page.wait_for_timeout(2000)
-
-
-
-
-
-
+    def test_reset_password_volver_a_iniciar_sesion(self, app: Aplicacion):
+        login = app.login
+        login.navegar()
+        app.navegacion.ir_a_login()
+        login.debe_mostrar_formulario()
+        login.buscar_por_rol("link", name=login._link_olvidaste_contrasenia).click()
+        login.debe_ver(login._reset_password)
+        login.fill_box(login._email, config.usuario("superadmin").email)
+        login.buscar_por_rol("link", name=login._link_volver_a_iniciar_sesion).click()
+        login.debe_mostrar_formulario()
+        login.page.wait_for_timeout(2000)
