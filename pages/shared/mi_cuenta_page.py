@@ -45,11 +45,12 @@ class MiCuentaPage(BasePage):
         self._direcciones: str = "Direcciones"
         self._metodos_pago: str = 'Métodos de pago'
         self._devoluciones: str = 'Devoluciones'
+        self._tickets: str = 'Tickets'
         self._chat: str = 'Chat'
         self._suscripcion: str = 'Suscripción'
         self._juega_gana: str = 'Juega y gana'
         self._seguridad: str = 'Seguridad'
-        self._soporte: str = 'Soporte'
+        # self._soporte: str = 'Soporte'  # Moved to Soporte locators section
 
         # locators para Mis Pedidos
         self._pedidos_header: str = 'Aquí tienes todo lo que has comprado.'
@@ -103,3 +104,23 @@ class MiCuentaPage(BasePage):
         # locators para chat
         self._boton_chat_usuario: str = "button[class*='flex flex-col gap-0.5']" # "[data-slot='card-content'] button"
         self._mensajes_en_chat: str = "section[role='dialog'][aria-label='Chat con la tienda']"
+
+        # locators para Soporte
+        self._soporte: str = "Soporte"
+        self._boton_nueva_consulta: str = "Nueva consulta"
+        self._dialogo_nueva_consulta: str = "Abrir una consulta"
+        self._asunto_box: str = "input[name='subject']"
+        self._cuentanos_box: str = "textarea[name='body']"
+        self._pedido_relacionado_box: str = "input[name='orderNumber']"
+        self._enviar_consulta_boton: str = "Enviar consulta"
+        self._consulta_enviada_mensaje: str = "Consulta enviada"
+        self._lista_soporte: str = "ul[class='flex flex-col gap-3'] > li"   # CSS selector
+        self._estado_dropdown = "button[id='ticket-status']"
+        self._priority_dropdown = "button[id='ticket-priority']"
+        self._respuesta_soporte = "textarea[placeholder='Escribe tu respuesta']"
+        self._boton_responder_cliente = "Responder al cliente"
+        self._respuesta_enviada_toast = "Respuesta enviada"
+        self._boton_close = "button[data-slot='dialog-close']"
+        self._boton_dar_por_resuelta = "Dar por resuelta"
+        self._consulta_cerrada_confirmacion = "Consulta cerrada"
+
