@@ -1,5 +1,6 @@
 import json
 import os
+import re
 import subprocess
 import sys
 from pathlib import Path
@@ -70,6 +71,10 @@ class BasePage:
         self.page.click(f"a:has-text('{texto}')")
         # self.page.locator(f'a[href*="{texto}"]').click()
 
+    def refresh_table(self):
+        button = self.page.locator('button[aria-label="Actualizar lista"]')  # ==> CSS
+        button.click()
+        self.page.wait_for_timeout(3000)
 
     def descargar_archivo_json(self, boton: str, nombre_archivo: Optional[str] = None) -> Path:
         """Descarga un archivo, lo guarda en Downloads y solo valida JSON si el contenido es texto UTF-8."""
