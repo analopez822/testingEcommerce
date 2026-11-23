@@ -1,9 +1,10 @@
 from core.base_page import BasePage
-from playwright.sync_api import Page
+from datos.prueba import Tarjeta
+from playwright.sync_api import Page, FrameLocator, Locator, expect
 
 class PagoTarjetaPage(BasePage):
     """
-        Clase con los locators y metodos de Pago con Tarjeta
+        Clase con los locators y metodos de Pago con Tarjeta (formulario seguro dentro de un iframe)
     """
 
     def __init__(self, page: Page):
@@ -11,25 +12,34 @@ class PagoTarjetaPage(BasePage):
 
         # locators pagina pago con tarjeta
         self._formulario_pago_tarjeta: str = "Pago seguro"
-        self._numero_tarjeta: str = 'input[aria-label="Número de tarjeta"]'
-        self._numero_tarjeta_robusto: str = "input[autocomplete='cc-number'], input[aria-label='Card number'], input[aria-label='Número de tarjeta']"
-        self._fecha_caducidad: str = "input[placeholder='MM / AA']"   #  "#payment-expiryInput"
-        self._codigo_seguridad: str = "#payment-cvcInput"
-        self._pais: str = "#payment-countryInput"
-        self._email: str = "#payment-linkEmailInput"
-        self._movil: str = "#payment-linkMobilePhoneInput"
-        self._nombre: str = "#payment-linkLegalNameInput"
+        self._iframe: str = "iframe[title='Campo de entrada seguro para el pago']"
         self._boton_pagar: str = "Pagar "
+        self._pago_confirmado: str = "Pago confirmado"
 
-    def fill_box(self, locator: str, text: str) -> None:
-        if any(token in locator for token in ("Número de tarjeta", "Card number", "cc-number", "cardnumber")):
-            selector = self._numero_tarjeta_robusto
-            field = self.page.locator(selector)
-            if field.count() == 0:
-                field = self.page.frame_locator("iframe[title*='Secure card payment input frame']").locator(selector)
-            field.first.fill(text)
-            return
-        super().fill_box(locator, text)
+    @property
+    def iframe(self) -> FrameLocator:
+        return self.page.frame_locator(self._iframe)
 
+    def debe_mostrar_formulario(self) -> None:
+        self.debe_ver(self._formulario_pago_tarjeta, primero=True)
 
+    def boton_pagar(self, indice: int) -> Locator:
+        """El texto 'Pagar ' sale varias veces en la pagina; el indice (2 tarjeta, 4 Klarna/PayPal) elige el correcto."""
+        return self.buscar_por_texto(self._boton_pagar).nth(indice)
 
+    def elegir_pestana(self, nombre: str) -> None:
+        """Cambia de metodo de pago dentro del iframe: 'klarna', 'paypal'..."""
+        self.iframe.locator(f"button[id='{nombre}-tab']").click()
+
+    def pagar_con_tarjeta(self, t: Tarjeta, indice_boton_pagar: int = 2) -> None:
+        boton_pagar = self.boton_pagar(indice_boton_pagar)
+        self.iframe.locator("input[id='payment-numberInput']").fill(t.numero)
+        self.iframe.locator("input[id='payment-expiryInput']").fill(t.caducidad)
+        self.iframe.locator("input[id='payment-cvcInput']").fill(t.cvc)
+        self.iframe.locator("select[id='payment-countryInput']").select_option(t.pais)
+        self.iframe.locator("input[id='payment-linkEmailInput']").fill(t.email)
+        self.iframe.locator("input[id='payment-linkMobilePhoneInput']").fill(t.movil)
+        self.iframe.locator("input[id='payment-linkLegalNameInput']").fill(t.nombre)
+        boton_pagar.scroll_into_view_if_needed()
+        expect(boton_pagar).to_be_visible()
+        boton_pagar.click()
