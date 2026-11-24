@@ -79,7 +79,6 @@ class TestSoportePage:
         app_mi_cuenta.page.wait_for_timeout(3000)
 
         # abriendo otro browser en incognito para contestar la consulta como super admin
-        # no puedo sacar login function para browser2 ????
         browser2 = app_navegacion.abrir_ventana_incognito(close_original_page=False) # para testear chat con los dos browsers abiertos
         admin_navegacion = NavegacionPage(browser2)    # pasando nuevo contexto a clases involucradas en test
         admin_login = LoginPage(browser2)
